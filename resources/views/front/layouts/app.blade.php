@@ -61,9 +61,9 @@
 
 					<!-- Post a Job Button based on the user role -->
 					@if($userRole === 'admin')
-						<a class="btn btn-primary" href="" type="submit">	Add to Collection</a>
+						<a class="btn btn-primary" href="{{ Route('account.createcollections') }}" type="submit">	Add to Collection</a>
 					@elseif($userRole === 'staff')
-						<a class="btn btn-primary" href="" type="submit">	Add to Collection</a>
+						<a class="btn btn-primary" href="{{ Route('account.createcollections') }}" type="submit">	Add to Collection</a>
 					@else
 						{{-- <a class="btn btn-primary" href="{{ route('account.createJob') }}" type="submit">Post a Job</a> --}}
 					@endif

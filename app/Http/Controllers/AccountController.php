@@ -10,6 +10,11 @@ use Intervention\Image\Drivers\Gd\Driver;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Models\User;
+use App\Models\Collection;
+use App\Models\Category;
+use App\Models\Brand;
+
+
 
 
 use Illuminate\Support\Facades\Auth;
@@ -313,4 +318,72 @@ public function updatePassword(Request $request){
         return redirect()->route('account.login')->with('success','You have successfully changed your password.');
 
     }
+
+    public function createcollections()
+        {
+
+            $categories = category::orderBy('name','ASC')->where('status',1)->get();
+            $brands = brand::orderBy('name','ASC')->where('status',1)->get();
+
+            return view('front.account.collections.create', [
+                'categories' =>  $categories,
+                'brands' => $brands, ]);
+        }
+
+
+
+
+public function store(Request $request)
+{
+    $request->validate([
+        'title' => 'required',
+        'category_id' => 'required',
+        'brand_id' => 'required',
+        'price' => 'required',
+        'images.*' => 'image|mimes:jpeg,png,jpg|max:2048'
+    ]);
+
+    $collection = Collection::create([
+        'title' => $request->title,
+        'category_id' => $request->category_id,
+        'brand_id' => $request->brand_id,
+        'price' => $request->price,
+        'stock' => $request->stock,
+        'size' => $request->size,
+        'material' => $request->material,
+        'fit' => $request->fit,
+        'style' => $request->style,
+        'description' => $request->description,
+        'highlights' => $request->highlights,
+        'is_featured' => false,
+        'status' => true,
+    ]);
+
+    // Save colors
+    $colors = explode(',', $request->colors);
+    foreach ($colors as $color) {
+        CollectionColor::create([
+            'collection_id' => $collection->id,
+            'color' => trim($color)
+        ]);
+    }
+
+    // Save images
+    if ($request->hasFile('images')) {
+        foreach ($request->file('images') as $index => $image) {
+            $filename = time() . '_' . $index . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('uploads/collections'), $filename);
+
+            CollectionImage::create([
+                'collection_id' => $collection->id,
+                'image' => $filename,
+                'is_main' => $index === 0
+            ]);
+        }
+    }
+
+    return redirect()->back()->with('success', 'Product added successfully');
+}
+
+
 }

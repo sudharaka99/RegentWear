@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('title'); // e.g., "Slim Fit T-Shirt"
             $table->foreignId('category_id')->constrained()->onDelete('cascade'); // T-Shirts, Shirts, etc.
-            $table->foreignId('brand_id')->constrained()->onDelete('cascade'); // Optional brand name
+            $table->foreignId('brand_id')->constrained()->onDelete('cascade');
             $table->string('price'); // Price of product
             $table->integer('stock')->default(0); // Quantity available
             $table->string('size')->nullable(); // S, M, L, XL (can also be a separate table)
@@ -25,13 +25,11 @@ return new class extends Migration
             $table->string('material')->nullable(); // Cotton, Denim, etc.
             $table->string('fit')->nullable(); // Regular, Slim, etc.
             $table->string('style')->nullable(); // Casual, Formal, etc.
-            $table->string('image')->nullable(); // Main product image
             $table->text('description')->nullable(); // Full product description
             $table->text('highlights')->nullable(); // Key features
             $table->boolean('is_featured')->default(false); // For homepage promotion
             $table->boolean('status')->default(true); // Show/hide product
             $table->timestamps();
-
         });
     }
 
