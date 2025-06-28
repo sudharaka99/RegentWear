@@ -335,54 +335,57 @@ public function updatePassword(Request $request){
 
 public function store(Request $request)
 {
-    $request->validate([
-        'title' => 'required',
-        'category_id' => 'required',
-        'brand_id' => 'required',
-        'price' => 'required',
-        'images.*' => 'image|mimes:jpeg,png,jpg|max:2048'
+    $validated = $request->validate([
+        'title' => 'required|string|max:255',
+        'price' => 'required|numeric',
+        'category_id' => 'required|exists:categories,id',
+        'brand_id' => 'required|exists:brands,id',
+        'size' => 'required|string',
+        'color' => 'required|string',
+        'material' => 'nullable|string',
+        'stock' => 'required|integer|min:0',
+        'fit' => 'nullable|string',
+        'style' => 'nullable|string',
+        'description' => 'required|string',
+        'highlights' => 'nullable|string',
+        'main_image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        'images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        'is_featured' => 'nullable|boolean',
+        'status' => 'nullable|boolean'
     ]);
 
-    $collection = Collection::create([
-        'title' => $request->title,
-        'category_id' => $request->category_id,
-        'brand_id' => $request->brand_id,
-        'price' => $request->price,
-        'stock' => $request->stock,
-        'size' => $request->size,
-        'material' => $request->material,
-        'fit' => $request->fit,
-        'style' => $request->style,
-        'description' => $request->description,
-        'highlights' => $request->highlights,
-        'is_featured' => false,
-        'status' => true,
-    ]);
-
-    // Save colors
-    $colors = explode(',', $request->colors);
-    foreach ($colors as $color) {
-        CollectionColor::create([
-            'collection_id' => $collection->id,
-            'color' => trim($color)
-        ]);
+    // Upload main image
+    if ($request->hasFile('main_image')) {
+        $mainImagePath = $request->file('main_image')->store('collections', 'public');
     }
 
-    // Save images
-    if ($request->hasFile('images')) {
-        foreach ($request->file('images') as $index => $image) {
-            $filename = time() . '_' . $index . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('uploads/collections'), $filename);
+    $collection = new Collection();
+    $collection->title = $validated['title'];
+    $collection->price = $validated['price'];
+    $collection->category_id = $validated['category_id'];
+    $collection->brand_id = $validated['brand_id'];
+    $collection->size = $validated['size'];
+    $collection->color = $validated['color'];
+    $collection->material = $validated['material'] ?? null;
+    $collection->stock = $validated['stock'];
+    $collection->fit = $validated['fit'] ?? null;
+    $collection->style = $validated['style'] ?? null;
+    $collection->description = $validated['description'];
+    $collection->highlights = $validated['highlights'] ?? null;
+    $collection->main_image = $mainImagePath;
+    $collection->is_featured = $request->has('is_featured') ? 1 : 0;
+    $collection->status = $request->has('status') ? 1 : 0;
+    $collection->save();
 
-            CollectionImage::create([
-                'collection_id' => $collection->id,
-                'image' => $filename,
-                'is_main' => $index === 0
-            ]);
+    // Upload additional images
+    if ($request->hasFile('images')) {
+        foreach ($request->file('images') as $file) {
+            $path = $file->store('collections', 'public');
+            $collection->images()->create(['image' => $path]); // Related model should point to collections_image
         }
     }
 
-    return redirect()->back()->with('success', 'Product added successfully');
+    return response()->json(['status' => true, 'message' => 'Collection saved successfully.']);
 }
 
 

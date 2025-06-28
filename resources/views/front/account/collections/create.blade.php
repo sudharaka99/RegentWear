@@ -20,7 +20,7 @@
             <div class="col-lg-9">
                 @include('front.message')
 
-                <form action="" method="POST" enctype="multipart/form-data" id="createCollectionForm" name="createCollectionForm">
+                <form action="{{ route('collections.store') }}"" method="POST" enctype="multipart/form-data" id="createCollectionForm" name="createCollectionForm">
                     @csrf
                     <div class="card border-0 shadow mb-4">
                         <div class="card-body card-form p-4">

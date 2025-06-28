@@ -42,7 +42,7 @@ Route::group (['account'], function () {
         Route::put('/account/update-profile', [AccountController::class, 'updateProfile'])->name('account.updateProfile');
         Route::post('/account/updatep-rofile-picture', [AccountController::class, 'updateProfilePic'])->name('account.updateProfilePic');
         Route::get('/create-collections', [AccountController::class, 'createcollections'])->name('account.createcollections');
-
+        Route::post('/collections/store', [AccountController::class, 'store'])->name('collections.store');
 });
 });
 
