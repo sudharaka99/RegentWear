@@ -99,10 +99,22 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-md-6 mb-4">
+                                 <div class="col-md-6 mb-4"> 
                                     <label class="mb-2">Material</label>
-                                    <input type="text" name="material" class="form-control" placeholder="Cotton, Denim">
+                                    <select name="material" class="form-control">
+                                        <option value="">Select Material</option>
+                                        <option value="Cotton">Cotton</option>
+                                        <option value="Denim">Denim</option>
+                                        <option value="Linen">Linen</option>
+                                        <option value="Polyester">Polyester</option>
+                                        <option value="Wool">Wool</option>
+                                        <option value="Silk">Silk</option>
+                                        <option value="Blended">Blended</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                    <p> </p>
                                 </div>
+
 
                                 <div class="col-md-6 mb-4">
                                     <label class="mb-2">Stock<span class="req">*</span></label>
@@ -113,12 +125,38 @@
                             <div class="row">
                                 <div class="col-md-6 mb-4">
                                     <label class="mb-2">Fit</label>
-                                    <input type="text" name="fit" class="form-control" placeholder="Slim, Regular">
+                                    <select name="fit" class="form-control">
+                                        <option value="">Select Fit</option>
+                                        <option value="Slim">Slim</option>
+                                        <option value="Regular">Regular</option>
+                                        <option value="Relaxed">Relaxed</option>
+                                        <option value="Loose">Loose</option>
+                                        <option value="Tailored">Tailored</option>
+                                        <option value="Athletic">Athletic</option>
+                                        <option value="Skinny">Skinny</option>
+                                        <option value="Oversized">Oversized</option>
+                                        <option value="Comfort">Comfort</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                    <p> </p>
                                 </div>
 
-                                <div class="col-md-6 mb-4">
+
+                               <div class="col-md-6 mb-4">
                                     <label class="mb-2">Style</label>
-                                    <input type="text" name="style" class="form-control" placeholder="Casual, Formal">
+                                        <select name="style" class="form-control">
+                                            <option value="">Select Style</option>
+                                            <option value="Casual">Casual</option>
+                                            <option value="Formal">Formal</option>
+                                            <option value="Sportswear">Sportswear</option>
+                                            <option value="Business Casual">Business Casual</option>
+                                            <option value="Streetwear">Streetwear</option>
+                                            <option value="Party">Party</option>
+                                            <option value="Traditional">Traditional</option>
+                                            <option value="Smart Casual">Smart Casual</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    <p> </p>
                                 </div>
                             </div>
 
