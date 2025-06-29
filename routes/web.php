@@ -43,7 +43,25 @@ Route::group (['account'], function () {
         Route::post('/account/updatep-rofile-picture', [AccountController::class, 'updateProfilePic'])->name('account.updateProfilePic');
         Route::get('/create-collections', [AccountController::class, 'createcollections'])->name('account.createcollections');
         Route::post('/collections/store', [AccountController::class, 'store'])->name('collections.store');
+        Route::get('/myCollections', [AccountController::class, 'myCollections'])->name('account.myCollections');
+
+
 });
+
+ Route::group (['middleware' => 'admin'], function () {
+        Route::get('/account/logout', [AccountController::class, 'logout'])->name('account.logout');
+        Route::get('/account/profile', [AccountController::class, 'profile'])->name('account.profile');  
+        Route::put('/account/update-profile', [AccountController::class, 'updateProfile'])->name('account.updateProfile');
+        Route::post('/account/updatep-rofile-picture', [AccountController::class, 'updateProfilePic'])->name('account.updateProfilePic');
+        Route::get('/create-collections', [AccountController::class, 'createcollections'])->name('account.createcollections');
+        Route::post('/collections/store', [AccountController::class, 'store'])->name('collections.store');
+        Route::get('/myCollections', [AccountController::class, 'myCollections'])->name('account.myCollections');
+
+
+});
+
+
+
 });
 
 Route::middleware([

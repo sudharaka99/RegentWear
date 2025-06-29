@@ -334,59 +334,65 @@ public function updatePassword(Request $request){
 
 
 public function store(Request $request)
-{
-    $validated = $request->validate([
-        'title' => 'required|string|max:255',
-        'price' => 'required|numeric',
-        'category_id' => 'required|exists:categories,id',
-        'brand_id' => 'required|exists:brands,id',
-        'size' => 'required|string',
-        'color' => 'required|string',
-        'material' => 'nullable|string',
-        'stock' => 'required|integer|min:0',
-        'fit' => 'nullable|string',
-        'style' => 'nullable|string',
-        'description' => 'required|string',
-        'highlights' => 'nullable|string',
-        'main_image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-        'images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-        'is_featured' => 'nullable|boolean',
-        'status' => 'nullable|boolean'
-    ]);
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'price' => 'required|numeric',
+            'category_id' => 'required|exists:categories,id',
+            'brand_id' => 'required|exists:brands,id',
+            'size' => 'required|string',
+            'color' => 'required|string',
+            'material' => 'nullable|string',
+            'stock' => 'required|integer|min:0',
+            'fit' => 'nullable|string',
+            'style' => 'nullable|string',
+            'description' => 'required|string',
+            'highlights' => 'nullable|string',
+            'main_image' => 'required|image|mimes:jpeg,png,jpg',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg',
+            'is_featured' => 'nullable|boolean',
+            'status' => 'nullable|boolean',
+        ]);
 
-    // Upload main image
-    if ($request->hasFile('main_image')) {
+        // Store main image
         $mainImagePath = $request->file('main_image')->store('collections', 'public');
-    }
+        $validated['main_image'] = $mainImagePath;
+        $validated['is_featured'] = $request->has('is_featured');
+        $validated['status'] = $request->has('status');
 
-    $collection = new Collection();
-    $collection->title = $validated['title'];
-    $collection->price = $validated['price'];
-    $collection->category_id = $validated['category_id'];
-    $collection->brand_id = $validated['brand_id'];
-    $collection->size = $validated['size'];
-    $collection->color = $validated['color'];
-    $collection->material = $validated['material'] ?? null;
-    $collection->stock = $validated['stock'];
-    $collection->fit = $validated['fit'] ?? null;
-    $collection->style = $validated['style'] ?? null;
-    $collection->description = $validated['description'];
-    $collection->highlights = $validated['highlights'] ?? null;
-    $collection->main_image = $mainImagePath;
-    $collection->is_featured = $request->has('is_featured') ? 1 : 0;
-    $collection->status = $request->has('status') ? 1 : 0;
-    $collection->save();
+        // Save product
+        $collection = Collection::create($validated);
 
-    // Upload additional images
-    if ($request->hasFile('images')) {
-        foreach ($request->file('images') as $file) {
-            $path = $file->store('collections', 'public');
-            $collection->images()->create(['image' => $path]); // Related model should point to collections_image
+        // Store additional images
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $imageFile) {
+                $imagePath = $imageFile->store('collections', 'public');
+                CollectionImage::create([
+                    'collection_id' => $collection->id,
+                    'image' => $imagePath,
+                ]);
+            }
         }
+
+        return response()->json([
+        'status' => true,
+        'message' => 'Product saved successfully.',
+    ]);
     }
 
-    return response()->json(['status' => true, 'message' => 'Collection saved successfully.']);
+    public function myCollections()
+    {
+        // return view('front.account.collections.my-collections', [
+        //     // 'collections' => Collection::where('user_id', Auth::id())->get(),  
+        // ]);
+
+      
+
+            $collections = Collection::latest()->paginate(10);
+            return view('front.account.collections.my-collections', [
+                'collections' => $collections
+            ]);
+    }
 }
 
 
-}

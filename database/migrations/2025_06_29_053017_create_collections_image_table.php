@@ -14,10 +14,9 @@ return new class extends Migration
     public function up()
     {
         Schema::create('collections_image', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('collection_id')->constrained()->onDelete('cascade'); // Link to the products table
-            $table->string('image'); // Path or filename of the image
-            $table->boolean('is_primary')->default(false); // Optional: to indicate main image
+             $table->id();
+            $table->foreignId('collection_id')->constrained('collections')->onDelete('cascade');
+            $table->string('image');
             $table->timestamps();
         });
     }
