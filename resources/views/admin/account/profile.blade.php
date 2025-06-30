@@ -1,4 +1,4 @@
-@extends('front.layouts.app')
+@extends('admin.layouts.app')
 
 @section('main')
 
@@ -16,7 +16,7 @@
         </div>
         <div class="row">
             <div class="col-lg-3">
-                @include('front.account.slidebar')
+                @include('admin.account.slidebar')
             </div>
             <div class="col-lg-9">
                 @include('front.message')
@@ -103,13 +103,13 @@ $("#userForm").submit(function(e){
     e.preventDefault();
 
     $.ajax({
-        url: '{{ route("account.updateProfile") }}',
+        url: '{{ route("admin.updateProfile") }}',
         type: 'PUT',
         dataType: 'json',
         data: $("#userForm").serializeArray(),
         success: function(response) {
             if(response.status == true) {
-                window.location.href = "{{route('account.profile')}}";
+                window.location.href = "{{route('admin.profile')}}";
             } else {
                 handleErrors(response.errors);
             }
@@ -130,7 +130,7 @@ $("#changePasswordForm").submit(function(e){
         data: $("#changePasswordForm").serializeArray(),
         success: function(response) {
             if(response.status == true) {
-                window.location.href = "{{route('account.profile')}}";
+                window.location.href = "{{route('admin.profile')}}";
             } else {
                 handleErrors(response.errors);
             }

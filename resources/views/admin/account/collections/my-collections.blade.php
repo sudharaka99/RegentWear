@@ -16,7 +16,7 @@
 
         <div class="row">
             <div class="col-lg-3">
-                @include('front.account.slidebar')
+                @include('admin.account.slidebar')
             </div>
 
             <div class="col-lg-9">

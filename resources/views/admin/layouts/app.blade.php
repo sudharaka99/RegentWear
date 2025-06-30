@@ -50,7 +50,7 @@
 
 					<!-- Account Button based on the user role -->
 					@if($userRole === 'admin')
-						<a class="btn btn-outline-primary me-2" href="" type="submit">Account</a>
+						<a class="btn btn-outline-primary me-2" href="{{ route('admin.profile') }}" type="submit">Account</a>
 					@elseif($userRole === 'staff')
 						<a class="btn btn-outline-primary me-2" href="" type="submit">Account</a>
 					@else
@@ -61,9 +61,9 @@
 
 					<!-- Post a Job Button based on the user role -->
 					@if($userRole === 'admin')
-						<a class="btn btn-primary" href="{{ Route('account.createcollections') }}" type="submit">	Add to Collection</a>
+						<a class="btn btn-primary" href="{{ Route('admin.createcollections') }}" type="submit">	Add to Collection</a>
 					@elseif($userRole === 'staff')
-						<a class="btn btn-primary" href="{{ Route('account.createcollections') }}" type="submit">	Add to Collection</a>
+						<a class="btn btn-primary" href="" type="submit">	Add to Collection</a>
 					@else
 						{{-- <a class="btn btn-primary" href="{{ route('account.createJob') }}" type="submit">Post a Job</a> --}}
 					@endif
@@ -134,7 +134,7 @@ $("#profilePicForm").submit(function(e){
 	var formData= new FormData(this);
 
 	$.ajax({
-		url:'{{ Route("account.updateProfilePic") }}',
+		url:'{{ Route("admin.updateProfilePic") }}',
 		type: 'post',
 		data:formData,
 		dataType:'json',

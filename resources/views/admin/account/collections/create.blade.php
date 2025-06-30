@@ -16,7 +16,7 @@
 
         <div class="row">
             <div class="col-lg-3">
-                @include('front.account.slidebar')
+                @include('admin.account.slidebar')
             </div>
 
             <div class="col-lg-9">
@@ -26,7 +26,7 @@
                     @csrf
                     <div class="card border-0 shadow mb-4">
                         <div class="card-body p-4">
-                            <h3 class="fs-4 mb-4">Product Details</h3>
+                            <h3 class="fs-4 mb-4">Add to collections</h3>
 
                             <div class="row">
                                 <div class="col-md-6 mb-4">
@@ -156,7 +156,7 @@
         var formData = new FormData(this);
 
         $.ajax({
-            url: '{{ route("collections.store") }}',
+            url: '{{ route("admin.collectionsStore") }}',
             type: 'POST',
             dataType: 'json',
             data: formData,
@@ -165,7 +165,7 @@
             success: function(response) {
                 $("button[type='submit']").prop('disabled', false);
                 if (response.status === true) {
-                    window.location.href = "{{ route('account.myCollections') }}";
+                    window.location.href = "{{ route('admin.myCollections') }}";
                 } else {
                     $(".is-invalid").removeClass('is-invalid');
                     $("p.invalid-feedback").removeClass('invalid-feedback').html('');

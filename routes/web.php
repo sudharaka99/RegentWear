@@ -6,6 +6,7 @@ use App\Http\Controllers\AccountController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,13 +50,12 @@ Route::group (['account'], function () {
 });
 
  Route::group (['middleware' => 'admin'], function () {
-        Route::get('/account/logout', [AccountController::class, 'logout'])->name('account.logout');
-        Route::get('/account/profile', [AccountController::class, 'profile'])->name('account.profile');  
-        Route::put('/account/update-profile', [AccountController::class, 'updateProfile'])->name('account.updateProfile');
-        Route::post('/account/updatep-rofile-picture', [AccountController::class, 'updateProfilePic'])->name('account.updateProfilePic');
-        Route::get('/create-collections', [AccountController::class, 'createcollections'])->name('account.createcollections');
-        Route::post('/collections/store', [AccountController::class, 'store'])->name('collections.store');
-        Route::get('/myCollections', [AccountController::class, 'myCollections'])->name('account.myCollections');
+        Route::get('/admin/profile', [AdminController::class, 'profile'])->name('admin.profile');  
+        Route::put('/admin/update-profile', [AdminController::class, 'updateProfile'])->name('admin.updateProfile');
+        Route::post('/admin/updatep-rofile-picture', [AdminController::class, 'updateProfilePic'])->name('admin.updateProfilePic');
+        Route::get('/admin/create-collections', [AdminController::class, 'createcollections'])->name('admin.createcollections');
+        Route::post('/admin/collections/store', [AdminController::class, 'store'])->name('admin.collectionsStore');
+        Route::get('/admin/myCollections', [AdminController::class, 'myCollections'])->name('admin.myCollections');
 
 
 });

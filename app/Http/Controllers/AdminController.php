@@ -1,126 +1,27 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\File;
-use Intervention\Image\ImageManager;
-use Intervention\Image\Drivers\Gd\Driver;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Mail;
 use App\Models\User;
 use App\Models\Collection;
+use App\Models\CollectionImage;
 use App\Models\Category;
 use App\Models\Brand;
+use Illuminate\Support\Facades\File;
+use Intervention\Image\ImageManager;
 
 
-
-
-use Illuminate\Support\Facades\Auth;
-
-
-class AccountController extends Controller
+class AdminController extends Controller
 {
-public function registration()
-{
-    return view('front.account.registration');
-}
-
- public function processRegistration(Request $request) {
-        
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:5|same:confirm_password',
-            'confirm_password' => 'required|min:5',
-        ]);
-    
-        if ($validator->passes()) {
-            
-            $user = new User();
-            $user->name = $request->name;
-            $user->email = $request->email;
-            $user->password = Hash::make($request->password);
-            $user->save();
-    
-            
-            session()->flash('success', 'You have registered successfully.');
-    
-           
-            return response()->json([
-                'status' => true,
-                'errors' => []
-            ]);
-    
-        } else {
-          
-            return response()->json([
-                'status' => false,
-                'errors' => $validator->errors()
-            ]);
-        }
-    }
-
-    public function authenticate(Request $request) {
-        // Validate the email and password fields
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required'
-        ]);
-    
-        if ($validator->passes()) {
-            // Attempt to log in the user with the provided email and password
-            if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-                // Fetch the authenticated user
-                $user = Auth::user();
-    
-                // Debug log to ensure the user and role are correctly fetched
-                \Log::info('User authenticated:', ['email' => $user->email, 'role' => $user->role]);
-    
-                // Check the role of the authenticated user
-                if ($user->role === 'admin') {
-                    // Redirect to the admin dashboard for admin users
-                    return redirect()->route('admin.profile');
-                } elseif ($user->role === 'staff') {
-                    // Redirect to the employer dashboard for employers
-                    return redirect()->route('');
-                
-                } else {
-                    // Redirect to the user profile for general users (customers)
-                    return redirect()->route('account.profile');
-                }
-            } else {
-                // Debug log for failed login attempt
-                \Log::error('Login failed for user:', ['email' => $request->email]);
-    
-                // If authentication fails, redirect back to the login page with an error message
-                return redirect()->route('account.login')->with('error', 'Either Email/Password is incorrect');
-            }
-        } else {
-            // If validation fails, redirect back to the login page with validation errors
-            return redirect()->route('account.login')
-                ->withErrors($validator)
-                ->withInput($request->only('email'));
-        }
-    }
-
-public function login()
-{
-    return view('front.account.login');
-}
-
-public function logout(Request $request)
-{
-    Auth::logout();
-    return redirect()->route('home')->with('success', 'You have logged out successfully.');
-
-}
-
-public function profile()
+    public function profile()
 {
     $user = Auth::user();
-    return view('front.account.profile', compact('user'));
+    return view('admin.account.profile', compact('user'));
 
 }
 
@@ -325,7 +226,7 @@ public function updatePassword(Request $request){
             $categories = category::orderBy('name','ASC')->where('status',1)->get();
             $brands = brand::orderBy('name','ASC')->where('status',1)->get();
 
-            return view('front.account.collections.create', [
+            return view('admin.account.collections.create', [
                 'categories' =>  $categories,
                 'brands' => $brands, ]);
         }
@@ -389,10 +290,9 @@ public function store(Request $request)
       
 
             $collections = Collection::latest()->paginate(10);
-            return view('front.account.collections.my-collections', [
+            return view('admin.account.collections.my-collections', [
                 'collections' => $collections
             ]);
     }
+
 }
-
-
