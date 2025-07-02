@@ -1,4 +1,4 @@
-@extends('front.layouts.app')
+@extends('admin.layouts.app')
 
 @section('main')
 <section class="section-5 bg-2">
@@ -26,7 +26,7 @@
                     <div class="card-body card-form">
                         <div class="d-flex justify-content-between align-items-center">
                             <h3 class="fs-4 mb-0">My Collections</h3>
-                            <a href="{{ route('account.createcollections') }}" class="btn btn-primary">Add Collection</a>
+                            <a href="{{ route('admin.createcollections') }}" class="btn btn-primary">Add Collection</a>
                         </div>
 
                         <div class="table-responsive mt-3">
@@ -75,9 +75,8 @@
                                 </tbody>
                             </table>
                         </div>
-
-                        <div class="mt-3">
-                            {{ $collections->links() }}
+                        <div>
+                            {{$collections->links()}}
                         </div>
                     </div>
                 </div>                

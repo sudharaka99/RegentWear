@@ -9,7 +9,7 @@ class Collection extends Model
     protected $fillable = [
         'title', 'price', 'category_id', 'brand_id', 'size', 'color',
         'material', 'stock', 'fit', 'style', 'description', 'highlights',
-        'main_image', 'is_featured', 'status'
+        'main_image', 'is_featured', 'status','user_id'
     ];
 
     public function images()

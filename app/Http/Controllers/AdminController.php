@@ -234,6 +234,7 @@ public function updatePassword(Request $request){
 
 
 
+
 public function store(Request $request)
     {
         $validated = $request->validate([
@@ -257,6 +258,7 @@ public function store(Request $request)
 
         // Store main image
         $mainImagePath = $request->file('main_image')->store('collections', 'public');
+        $validated['user_id'] = auth()->id();
         $validated['main_image'] = $mainImagePath;
         $validated['is_featured'] = $request->has('is_featured');
         $validated['status'] = $request->has('status');
@@ -274,10 +276,10 @@ public function store(Request $request)
                 ]);
             }
         }
-
+        session()->flash('success', 'Collection saved successfully.');
         return response()->json([
         'status' => true,
-        'message' => 'Product saved successfully.',
+        'message' => 'Collection saved successfully.',
     ]);
     }
 
@@ -289,7 +291,7 @@ public function store(Request $request)
 
       
 
-            $collections = Collection::latest()->paginate(10);
+            $collections = Collection::latest()->paginate(5);
             return view('admin.account.collections.my-collections', [
                 'collections' => $collections
             ]);

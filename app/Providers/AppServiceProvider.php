@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Pagination\Paginator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +24,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        // Use Bootstrap for pagination
+        Paginator::useBootstrapFive();
+
+        // Optionally, you can set the default locale or other configurations here
+        // \Carbon\Carbon::setLocale(config('app.locale'));
     }
 }
