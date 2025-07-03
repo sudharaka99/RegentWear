@@ -56,6 +56,7 @@ Route::group (['account'], function () {
         Route::get('/admin/create-collections', [AdminController::class, 'createcollections'])->name('admin.createcollections');
         Route::post('/admin/collections/store', [AdminController::class, 'store'])->name('admin.collectionsStore');
         Route::get('/admin/myCollections', [AdminController::class, 'myCollections'])->name('admin.myCollections');
+        Route::get('/admin/editCollections/{id}', [AdminController::class, 'editCollections'])->name('admin.editCollections');
 
 
 });

@@ -297,4 +297,17 @@ public function store(Request $request)
             ]);
     }
 
+    public function editCollections($id)
+    {
+        $categories = Category::orderBy('name', 'ASC')->where('status', 1)->get();
+        $brands = Brand::orderBy('name', 'ASC')->where('status', 1)->get();
+        $collection = Collection::findOrFail($id);
+
+        return view('admin.account.collections.edit', [
+            'categories' => $categories,
+            'brands' => $brands,
+            'collection' => $collection
+        ]);
+    }
+
 }

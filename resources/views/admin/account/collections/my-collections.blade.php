@@ -61,7 +61,7 @@
                                                     </button>
                                                     <ul class="dropdown-menu dropdown-menu-end">
                                                         <li><a class="dropdown-item" href=""><i class="fa fa-eye"></i> View</a></li>
-                                                        <li><a class="dropdown-item" href=""><i class="fa fa-edit"></i> Edit</a></li>
+                                                        <li><a class="dropdown-item" href="{{ Route('admin.editCollections',$collection->id) }}"><i class="fa fa-edit"></i> Edit</a></li>
                                                         <li><a class="dropdown-item text-danger" href="#" onclick="deleteCollection({{ $collection->id }})"><i class="fa fa-trash"></i> Delete</a></li>
                                                     </ul>
                                                 </div>
