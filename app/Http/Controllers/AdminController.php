@@ -236,52 +236,65 @@ public function updatePassword(Request $request){
 
 
 public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'price' => 'required|numeric',
-            'category_id' => 'required|exists:categories,id',
-            'brand_id' => 'required|exists:brands,id',
-            'size' => 'required|string',
-            'color' => 'required|string',
-            'material' => 'nullable|string',
-            'stock' => 'required|integer|min:0',
-            'fit' => 'nullable|string',
-            'style' => 'nullable|string',
-            'description' => 'required|string',
-            'highlights' => 'nullable|string',
-            'main_image' => 'required|image|mimes:jpeg,png,jpg',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg',
-            'is_featured' => 'nullable|boolean',
-            'status' => 'nullable|boolean',
-        ]);
+{
+    $validated = $request->validate([
+        'title' => 'required|string|max:255',
+        'price' => 'required|numeric',
+        'category_id' => 'required|exists:categories,id',
+        'brand_id' => 'required|exists:brands,id',
+        'size' => 'required|string',
+        'color' => 'required|string',
+        'material' => 'nullable|string',
+        'stock' => 'required|integer|min:0',
+        'fit' => 'nullable|string',
+        'style' => 'nullable|string',
+        'description' => 'required|string',
+        'highlights' => 'nullable|string',
+        'main_image' => 'required|image|mimes:jpeg,png,jpg',
+        'images.*' => 'nullable|image|mimes:jpeg,png,jpg',
+        'is_featured' => 'nullable|boolean',
+        'status' => 'nullable|boolean',
+    ]);
 
-        // Store main image
-        $mainImagePath = $request->file('main_image')->store('collections', 'public');
-        $validated['user_id'] = auth()->id();
-        $validated['main_image'] = $mainImagePath;
-        $validated['is_featured'] = $request->has('is_featured');
-        $validated['status'] = $request->has('status');
+    // Helper function to generate a random uppercase string
+    function randomString($length = 10) {
+        return strtoupper(substr(bin2hex(random_bytes($length)), 0, $length));
+    }
 
-        // Save product
-        $collection = Collection::create($validated);
+    // Store main image with custom name directly in public disk root
+    $mainImageFile = $request->file('main_image');
+    $mainImageName = 'main_' . randomString() . '.' . $mainImageFile->getClientOriginalExtension();
+    $mainImagePath = $mainImageFile->storeAs('', $mainImageName, 'public');
 
-        // Store additional images
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $imageFile) {
-                $imagePath = $imageFile->store('collections', 'public');
-                CollectionImage::create([
-                    'collection_id' => $collection->id,
-                    'image' => $imagePath,
-                ]);
-            }
+    $validated['user_id'] = auth()->id();
+    $validated['main_image'] = $mainImagePath;
+    $validated['is_featured'] = $request->has('is_featured');
+    $validated['status'] = $request->has('status');
+
+    // Save the collection
+    $collection = Collection::create($validated);
+
+    // Store additional images directly in public disk root with custom names
+    if ($request->hasFile('images')) {
+        foreach ($request->file('images') as $imageFile) {
+            $imageName = 'img_' . randomString() . '.' . $imageFile->getClientOriginalExtension();
+            $imagePath = $imageFile->storeAs('', $imageName, 'public');
+
+            CollectionImage::create([
+                'collection_id' => $collection->id,
+                'image' => $imagePath,
+            ]);
         }
-        session()->flash('success', 'Collection saved successfully.');
-        return response()->json([
+    }
+
+    session()->flash('success', 'Collection saved successfully.');
+
+    return response()->json([
         'status' => true,
         'message' => 'Collection saved successfully.',
     ]);
-    }
+}
+
 
     public function myCollections()
     {
