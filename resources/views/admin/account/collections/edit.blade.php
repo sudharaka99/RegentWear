@@ -122,9 +122,10 @@
                             <input type="file" name="main_image" id="main_image" class="form-control">
 
                             @if($collection->main_image)
-                                <div class="mt-2">
-                                    <img src="{{ asset('storage/' . $collection->main_image) }}" alt="Main Image" width="150" class="border rounded">
-                                </div>
+                                <img src="{{ asset('storage/' . $collection->main_image) }}"
+                                class="img-thumbnail rounded"
+                                style="width: 80px; height: 80px; object-fit: cover;">
+
                             @endif
                             <p></p>
                         </div>

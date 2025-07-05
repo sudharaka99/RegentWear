@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use App\Models\User;
 use App\Models\Collection;
 use App\Models\CollectionImage;
+use Intervention\Image\Drivers\Gd\Driver;
 use App\Models\Category;
 use App\Models\Brand;
 use Illuminate\Support\Facades\File;
@@ -264,7 +265,7 @@ public function store(Request $request)
     // Store main image with custom name directly in public disk root
     $mainImageFile = $request->file('main_image');
     $mainImageName = 'main_' . randomString() . '.' . $mainImageFile->getClientOriginalExtension();
-    $mainImagePath = $mainImageFile->storeAs('', $mainImageName, 'public');
+    $mainImagePath = $mainImageFile->storeAs('collections', $mainImageName, 'public');
 
     $validated['user_id'] = auth()->id();
     $validated['main_image'] = $mainImagePath;
