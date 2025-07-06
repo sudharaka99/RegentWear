@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class CollectionImage extends Model
 {
+    protected $table = 'collections_image';
     protected $fillable = ['collection_id', 'image'];
+    
 
     public function collection()
     {

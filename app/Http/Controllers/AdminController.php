@@ -279,7 +279,7 @@ public function store(Request $request)
     if ($request->hasFile('images')) {
         foreach ($request->file('images') as $imageFile) {
             $imageName = 'img_' . randomString() . '.' . $imageFile->getClientOriginalExtension();
-            $imagePath = $imageFile->storeAs('', $imageName, 'public');
+            $imagePath = $imageFile->storeAs('Additional', $imageName, 'public');
 
             CollectionImage::create([
                 'collection_id' => $collection->id,
@@ -316,11 +316,13 @@ public function store(Request $request)
         $categories = Category::orderBy('name', 'ASC')->where('status', 1)->get();
         $brands = Brand::orderBy('name', 'ASC')->where('status', 1)->get();
         $collection = Collection::findOrFail($id);
+        $collection->images = CollectionImage::where('collection_id', $id)->get();
 
         return view('admin.account.collections.edit', [
             'categories' => $categories,
             'brands' => $brands,
-            'collection' => $collection
+            'collection' => $collection,
+            
         ]);
     }
 
